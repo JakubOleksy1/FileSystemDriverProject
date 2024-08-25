@@ -2,25 +2,19 @@
 
 #include "WfsDriver.h"
 #include "Messages.h"
+#include "Routines.h"
 
 PFILE_SYSTEM_DATA GlobalFileSystemData;
-
-NTSTATUS YourCreateRoutine(PDEVICE_OBJECT DeviceObject, PIRP Irp);
-NTSTATUS YourCloseRoutine(PDEVICE_OBJECT DeviceObject, PIRP Irp);
-NTSTATUS YourReadRoutine(PDEVICE_OBJECT DeviceObject, PIRP Irp);
-NTSTATUS YourWriteRoutine(PDEVICE_OBJECT DeviceObject, PIRP Irp);
-NTSTATUS YourQueryInformationRoutine(PDEVICE_OBJECT DeviceObject, PIRP Irp);
-NTSTATUS YourDirectoryControlRoutine(PDEVICE_OBJECT DeviceObject, PIRP Irp);
 
 NTSTATUS DriverEntry(PDRIVER_OBJECT pDriverObject, PUNICODE_STRING pRegistryPath) {
 	NTSTATUS status;
 
-	//pDriverObject->MajorFunction[IRP_MJ_CREATE] = YourCreateRoutine;
-	//pDriverObject->MajorFunction[IRP_MJ_CLOSE] = YourCloseRoutine;
-	//pDriverObject->MajorFunction[IRP_MJ_READ] = YourReadRoutine;
-	//pDriverObject->MajorFunction[IRP_MJ_WRITE] = YourWriteRoutine;
-	//pDriverObject->MajorFunction[IRP_MJ_QUERY_INFORMATION] = YourQueryInformationRoutine;
-	//pDriverObject->MajorFunction[IRP_MJ_DIRECTORY_CONTROL] = YourDirectoryControlRoutine;
+	pDriverObject->MajorFunction[IRP_MJ_CREATE] = CreateRoutine;
+	pDriverObject->MajorFunction[IRP_MJ_CLOSE] = CloseRoutine;
+	pDriverObject->MajorFunction[IRP_MJ_READ] = ReadRoutine;
+	pDriverObject->MajorFunction[IRP_MJ_WRITE] = WriteRoutine;
+	pDriverObject->MajorFunction[IRP_MJ_QUERY_INFORMATION] = QueryInformationRoutine;
+	pDriverObject->MajorFunction[IRP_MJ_DIRECTORY_CONTROL] = DirectoryControlRoutine;
 
 	pDriverObject->DriverUnload = UnloadDriver;
 

@@ -112,9 +112,11 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Messages.h" />
+    <ClInclude Include="Routines.h" />
     <ClInclude Include="WfsDriver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Routines.c" />
     <ClCompile Include="WfsDriver.c" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
