@@ -1,0 +1,2 @@
+select vdisk file="C:\virtualdisk\virtualdisk.vhdx"
+detach vdisk
