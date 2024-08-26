@@ -26,5 +26,5 @@ extern PFILE_SYSTEM_DATA GlobalFileSystemData;
 
 NTSTATUS InitializeDriverResources();
 NTSTATUS CleanupDriverResources();
-NTSTATUS CreateDevice(PDRIVER_OBJECT DriverObject);
-NTSTATUS DeleteDevice(PDRIVER_OBJECT DriverObject);
+//NTSTATUS CreateDevice(PDRIVER_OBJECT DriverObject);
+//NTSTATUS DeleteDevice(PDRIVER_OBJECT DriverObject);

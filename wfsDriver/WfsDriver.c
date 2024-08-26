@@ -68,6 +68,7 @@ NTSTATUS CleanupDriverResources() {
 	return STATUS_SUCCESS;
 }
 
+/*
 NTSTATUS CreateDevice(PDRIVER_OBJECT DriverObject) {
 	NTSTATUS status;
 	PDEVICE_OBJECT deviceObject;
@@ -109,3 +110,4 @@ NTSTATUS DeleteDevice(PDRIVER_OBJECT pDriverObject) {
 
 	return STATUS_SUCCESS;
 }
+*/
