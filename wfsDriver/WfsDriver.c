@@ -6,7 +6,7 @@
 
 PFILE_SYSTEM_DATA GlobalFileSystemData;
 
-NTSTATUS DriverEntry(PDRIVER_OBJECT pDriverObject, PUNICODE_STRING pRegistryPath) {
+NTSTATUS DriverEntry(PDRIVER_OBJECT pDriverObject, PUNICODE_STRING pRegistryPath ) {
 	NTSTATUS status;
 
 	pDriverObject->MajorFunction[IRP_MJ_CREATE] = CreateRoutine;
@@ -24,11 +24,11 @@ NTSTATUS DriverEntry(PDRIVER_OBJECT pDriverObject, PUNICODE_STRING pRegistryPath
 		return status;
 	}
 
-	status = CreateDevice(pDriverObject);
+	/*status = CreateDevice(pDriverObject);
 	if (!NT_SUCCESS(status)) {
 		CleanupDriverResources();
 		return status;
-	}
+	}*/
 
 	DebugMessage("DriverEntry - full success!");
 
@@ -37,7 +37,7 @@ NTSTATUS DriverEntry(PDRIVER_OBJECT pDriverObject, PUNICODE_STRING pRegistryPath
 
 NTSTATUS UnloadDriver(PDRIVER_OBJECT pDriverObject) {
 	CleanupDriverResources();
-	DeleteDevice(pDriverObject);
+	//DeleteDevice(pDriverObject);
 
 	DebugMessage("UnloadDriver unloaded driver!");
 	return STATUS_SUCCESS;

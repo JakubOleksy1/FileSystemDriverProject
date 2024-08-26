@@ -1,6 +1,6 @@
 #pragma once
 
-#include <ntddk.h>
+#include <ntifs.h>
 
 NTSTATUS CreateRoutine(PDEVICE_OBJECT DeviceObject, PIRP Irp);
 NTSTATUS CloseRoutine(PDEVICE_OBJECT DeviceObject, PIRP Irp);
