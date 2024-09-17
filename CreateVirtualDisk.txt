@@ -1,6 +1,0 @@
-create vdisk file="C:\virtualdisk\virtualdisk.vhdx" maximum=1024
-select vdisk file="C:\virtualdisk\virtualdisk.vhdx"
-attach vdisk
-create partition primary
-format fs=ntfs quick
-assign letter=W

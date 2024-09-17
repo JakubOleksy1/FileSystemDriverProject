@@ -10,8 +10,8 @@
 #define DRIVER_INTERNAL_TAG 'DRIV'
 #define SYNCHRONIZATION_TAG 'SYNC'
 
-#define DEVICE_NAME L"\\Device\\WFSDevice"
-#define SYMBOLIC_LINK_NAME L"\\DosDevices\\W:"
+#define DEVICE_NAME L"\\Device\\WFSDeviceUnique"
+#define SYMBOLIC_LINK_NAME L"\\DosDevices\\WFSDeviceUnique"
 
 NTSTATUS DriverEntry(PDRIVER_OBJECT pDriverObject, PUNICODE_STRING pRegistryPath);
 NTSTATUS UnloadDriver(PDRIVER_OBJECT DriverObject);
@@ -19,12 +19,11 @@ NTSTATUS UnloadDriver(PDRIVER_OBJECT DriverObject);
 typedef struct _FILE_SYSTEM_DATA {
     LIST_ENTRY FileList;
     KEVENT Event;
-
 } FILE_SYSTEM_DATA, * PFILE_SYSTEM_DATA;
 
 extern PFILE_SYSTEM_DATA GlobalFileSystemData;
 
 NTSTATUS InitializeDriverResources();
 NTSTATUS CleanupDriverResources();
-//NTSTATUS CreateDevice(PDRIVER_OBJECT DriverObject);
-//NTSTATUS DeleteDevice(PDRIVER_OBJECT DriverObject);
+NTSTATUS CreateDevice(PDRIVER_OBJECT DriverObject);
+NTSTATUS DeleteDevice(PDRIVER_OBJECT DriverObject);

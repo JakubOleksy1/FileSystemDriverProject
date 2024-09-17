@@ -5,22 +5,26 @@ VisualStudioVersion = 17.11.35219.272
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "wfsDriver", "wfsDriver\wfsDriver.vcxproj", "{C52492E7-B3F0-4AC7-B0D8-699C1279E2BD}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scripts", "Scripts", "{76E991A2-0483-4F96-A3FF-08320F8BBFC5}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "UltimateWfsDriverUtility", "UltimateWfsDriverUtility\UltimateWfsDriverUtility.vcxproj", "{C4A5A963-ECA1-4C41-8EF5-A8AF4132376F}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{5AB741F4-124E-4C92-ACE4-83ECD6238BB0}"
 	ProjectSection(SolutionItems) = preProject
-		CreateVirtualDisk.bat = CreateVirtualDisk.bat
-		CreateVirtualDisk.txt = CreateVirtualDisk.txt
-		RemoveVirtualDisk.bat = RemoveVirtualDisk.bat
-		RemoveVirtualDisk.txt = RemoveVirtualDisk.txt
-		StartDriver.bat = StartDriver.bat
-		StopDriver.bat = StopDriver.bat
+		Scripts\CreateVirtualDisk.bat = Scripts\CreateVirtualDisk.bat
+		Scripts\InstallDriver.bat = Scripts\InstallDriver.bat
+		Scripts\RemoveVirtualDisk.bat = Scripts\RemoveVirtualDisk.bat
+		Scripts\StartDriver.bat = Scripts\StartDriver.bat
+		Scripts\StopDriver.bat = Scripts\StopDriver.bat
+		Scripts\UninstallDriver.bat = Scripts\UninstallDriver.bat
 	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|ARM64 = Debug|ARM64
 		Debug|x64 = Debug|x64
+		Debug|x86 = Debug|x86
 		Release|ARM64 = Release|ARM64
 		Release|x64 = Release|x64
+		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
 		{C52492E7-B3F0-4AC7-B0D8-699C1279E2BD}.Debug|ARM64.ActiveCfg = Debug|ARM64
@@ -29,12 +33,30 @@ Global
 		{C52492E7-B3F0-4AC7-B0D8-699C1279E2BD}.Debug|x64.ActiveCfg = Debug|x64
 		{C52492E7-B3F0-4AC7-B0D8-699C1279E2BD}.Debug|x64.Build.0 = Debug|x64
 		{C52492E7-B3F0-4AC7-B0D8-699C1279E2BD}.Debug|x64.Deploy.0 = Debug|x64
+		{C52492E7-B3F0-4AC7-B0D8-699C1279E2BD}.Debug|x86.ActiveCfg = Debug|x64
+		{C52492E7-B3F0-4AC7-B0D8-699C1279E2BD}.Debug|x86.Build.0 = Debug|x64
+		{C52492E7-B3F0-4AC7-B0D8-699C1279E2BD}.Debug|x86.Deploy.0 = Debug|x64
 		{C52492E7-B3F0-4AC7-B0D8-699C1279E2BD}.Release|ARM64.ActiveCfg = Release|ARM64
 		{C52492E7-B3F0-4AC7-B0D8-699C1279E2BD}.Release|ARM64.Build.0 = Release|ARM64
 		{C52492E7-B3F0-4AC7-B0D8-699C1279E2BD}.Release|ARM64.Deploy.0 = Release|ARM64
 		{C52492E7-B3F0-4AC7-B0D8-699C1279E2BD}.Release|x64.ActiveCfg = Release|x64
 		{C52492E7-B3F0-4AC7-B0D8-699C1279E2BD}.Release|x64.Build.0 = Release|x64
 		{C52492E7-B3F0-4AC7-B0D8-699C1279E2BD}.Release|x64.Deploy.0 = Release|x64
+		{C52492E7-B3F0-4AC7-B0D8-699C1279E2BD}.Release|x86.ActiveCfg = Release|x64
+		{C52492E7-B3F0-4AC7-B0D8-699C1279E2BD}.Release|x86.Build.0 = Release|x64
+		{C52492E7-B3F0-4AC7-B0D8-699C1279E2BD}.Release|x86.Deploy.0 = Release|x64
+		{C4A5A963-ECA1-4C41-8EF5-A8AF4132376F}.Debug|ARM64.ActiveCfg = Debug|x64
+		{C4A5A963-ECA1-4C41-8EF5-A8AF4132376F}.Debug|ARM64.Build.0 = Debug|x64
+		{C4A5A963-ECA1-4C41-8EF5-A8AF4132376F}.Debug|x64.ActiveCfg = Debug|x64
+		{C4A5A963-ECA1-4C41-8EF5-A8AF4132376F}.Debug|x64.Build.0 = Debug|x64
+		{C4A5A963-ECA1-4C41-8EF5-A8AF4132376F}.Debug|x86.ActiveCfg = Debug|Win32
+		{C4A5A963-ECA1-4C41-8EF5-A8AF4132376F}.Debug|x86.Build.0 = Debug|Win32
+		{C4A5A963-ECA1-4C41-8EF5-A8AF4132376F}.Release|ARM64.ActiveCfg = Release|x64
+		{C4A5A963-ECA1-4C41-8EF5-A8AF4132376F}.Release|ARM64.Build.0 = Release|x64
+		{C4A5A963-ECA1-4C41-8EF5-A8AF4132376F}.Release|x64.ActiveCfg = Release|x64
+		{C4A5A963-ECA1-4C41-8EF5-A8AF4132376F}.Release|x64.Build.0 = Release|x64
+		{C4A5A963-ECA1-4C41-8EF5-A8AF4132376F}.Release|x86.ActiveCfg = Release|Win32
+		{C4A5A963-ECA1-4C41-8EF5-A8AF4132376F}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
