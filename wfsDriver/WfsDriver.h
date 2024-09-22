@@ -11,7 +11,6 @@
 #define SYNCHRONIZATION_TAG 'SYNC'
 #define MAX_FILE_SIZE (1024 * 1024) 
 
-
 #define DEVICE_NAME L"\\Device\\WFSDeviceUnique"
 #define SYMBOLIC_LINK_NAME L"\\DosDevices\\WFSDeviceUnique"
 
