@@ -7,6 +7,7 @@
 #include <algorithm>
 #include <cctype>
 #include <codecvt>
+#include <regex>
 
 #define IOCTL_CREATE_VDISK CTL_CODE(FILE_DEVICE_DISK, 0x800, METHOD_BUFFERED, FILE_ANY_ACCESS)
 #define IOCTL_REMOVE_VDISK CTL_CODE(FILE_DEVICE_DISK, 0x801, METHOD_BUFFERED, FILE_ANY_ACCESS)
@@ -107,7 +108,6 @@ int main() {
         }
         else if (command == "QUERYFILE") {
             queryFileFromList();
-            continue; 
         }
         else if (command == "LISTFILES") {
             listFilesInVirtualDisk();
@@ -447,27 +447,33 @@ void queryFileInformation(HANDLE hFile, const std::string& queryType) {
     }
 }
 
+// Helper function to convert std::string to std::wstring
 std::wstring stringToWstring(const std::string& str) {
     return std::wstring(str.begin(), str.end());
 }
 
-bool writeFileToDevice(const std::string& filePath, const std::string& dataToWrite) {
+// Function to validate if the file path includes a valid file name
+bool isValidFilePath(const std::string& path) {
+    std::regex pathRegex("^[a-zA-Z]:\\\\.+\\..+$");
+    return std::regex_match(path, pathRegex);
+}
 
+bool writeFileToDevice(const std::string& filePath, const std::string& dataToWrite) {
     std::wstring wideFilePath = stringToWstring(filePath);
 
     HANDLE hFile = CreateFile(
-        wideFilePath.c_str(),  
+        wideFilePath.c_str(),
         GENERIC_WRITE,
         0,
         NULL,
-        CREATE_ALWAYS, 
+        CREATE_ALWAYS,
         FILE_ATTRIBUTE_NORMAL,
         NULL
     );
 
     if (hFile == INVALID_HANDLE_VALUE) {
         std::cerr << "Failed to create or open file: " << GetLastError() << std::endl;
-        return false; 
+        return false;
     }
 
     DWORD bytesWritten;
@@ -489,9 +495,8 @@ bool writeFileToDevice(const std::string& filePath, const std::string& dataToWri
     }
 
     CloseHandle(hFile);
-    return true;  
+    return true;
 }
-
 
 bool appendToFile(const std::string& filePath, const std::string& dataToAppend) {
     std::wstring wideFilePath = stringToWstring(filePath);
@@ -508,7 +513,7 @@ bool appendToFile(const std::string& filePath, const std::string& dataToAppend) 
 
     if (hFile == INVALID_HANDLE_VALUE) {
         std::cerr << "Failed to open file for appending: " << GetLastError() << std::endl;
-        return false; 
+        return false;
     }
 
     DWORD bytesWritten;
@@ -523,66 +528,58 @@ bool appendToFile(const std::string& filePath, const std::string& dataToAppend) 
     if (!success) {
         std::cerr << "Failed to append data to file: " << GetLastError() << std::endl;
         CloseHandle(hFile);
-        return false;  
+        return false;
     }
     else {
         std::cout << "Successfully appended " << bytesWritten << " bytes to the file." << std::endl;
     }
 
     CloseHandle(hFile);
-    return true; 
+    return true;
 }
 
 void createAndWriteNewFile() {
-   
+
     std::string newFileName;
     std::cout << "Enter the full path and name of the new file (e.g., W:\\newTestFile.txt): ";
     std::getline(std::cin, newFileName);
 
-    
-    HANDLE hFile = CreateFile(
-        stringToWstring(newFileName).c_str(),
-        GENERIC_WRITE,
-        0,
-        NULL,
-        CREATE_ALWAYS,
-        FILE_ATTRIBUTE_NORMAL,
-        NULL
-    );
-
-    if (hFile == INVALID_HANDLE_VALUE) {
-        std::cerr << "Failed to create or open file: " << GetLastError() << std::endl;
-        std::cerr << "Error occurred. Aborting further operations." << std::endl;
-        return; 
+    if (!isValidFilePath(newFileName)) {
+        std::cerr << "Invalid file path or file name. Please enter a valid path and file name (e.g., W:\\newTestFile.txt)." << std::endl;
+        return;  
     }
 
-    CloseHandle(hFile);
-
-  
     std::string fileContent;
     std::cout << "Enter the content to write to the file: ";
     std::getline(std::cin, fileContent);
 
- 
     if (!writeFileToDevice(newFileName, fileContent)) {
         std::cerr << "Error occurred. Aborting further operations." << std::endl;
         return; 
     }
 
-
     std::string appendChoice;
-    std::cout << "Would you like to append more content to the file? (yes/no): ";
-    std::getline(std::cin, appendChoice);
+    while (true) {
+        std::cout << "Would you like to append more content to the file? (yes/no): ";
+        std::getline(std::cin, appendChoice);
+
+        if (appendChoice == "yes" || appendChoice == "no") {
+            break;
+        }
+        else {
+            std::cerr << "Invalid input. Please enter 'yes' or 'no'." << std::endl;
+        }
+    }
 
     if (appendChoice == "yes") {
-     
+    
         std::string additionalData;
         std::cout << "Enter the content to append: ";
         std::getline(std::cin, additionalData);
 
         if (!appendToFile(newFileName, additionalData)) {
             std::cerr << "Failed to append content. Aborting." << std::endl;
-            return;  
+            return; 
         }
     }
 
