@@ -54,45 +54,79 @@ string getScriptsPath();
 string getDriverPath();
 
 int main() {
-    cout << "\n";
+    std::cout << "\n";
     displayAscii("../../UltimateWfsDriverUtility/banner.txt");
-    cout << "\n\t\t\t Ultimate wfsDriver Utility\n\n\n";
+    std::cout << "\n\t\t\t Ultimate wfsDriver Utility\n\n\n";
 
     showHelp();
 
     ensureElevated();
 
-    string scriptsPath = getScriptsPath();
-
-    string command;
+    std::string scriptsPath = getScriptsPath();
+    std::string command;
 
     while (true) {
         cout << "\n>> ";
-        getline(cin, command);
+        getline(cin, command); 
         cout << "\n";
 
-        transform(command.begin(), command.end(), command.begin(), ::toupper);
+        command.erase(std::remove_if(command.begin(), command.end(), ::isspace), command.end());
 
-        if (command == "INSTALL")      installDriver(scriptsPath);
-        else if (command == "UNINSTALL")    uninstallDriver(scriptsPath);
-        else if (command == "CREATEVDISK")  createVirtualDisk(scriptsPath);
-        else if (command == "REMOVEVDISK")  removeVirtualDisk(scriptsPath);
-        else if (command == "START")        startDriver(scriptsPath);
-        else if (command == "STOP")         stopDriver(scriptsPath);
-        else if (command == "DEVICEOPS")    performDeviceOperations();
-        else if (command == "WRITE")        createAndWriteNewFile();
-        else if (command == "READ")         readFile();
-        else if (command == "QUERYFILE")    queryFileFromList();
-        else if (command == "LISTFILES")    listFilesInVirtualDisk();
-        else if (command == "DELETE") {
-            string fileName;
-            cout << "Enter the full path of the file to delete (e.g.,W:\\writeTest.txt): ";
-            getline(cin, fileName);
-            deleteFileFromVirtualDisk(fileName);  // Call the delete function
+        if (command.empty()) {
+            continue;
         }
-        else if (command == "HELP")         showHelp();
-        else if (command == "EXIT")         exit(0);
-        else cout << "Unknown command entered. Type 'help' to see available commands.\n";
+
+        std::transform(command.begin(), command.end(), command.begin(), ::toupper);
+
+        if (command == "INSTALL") {
+            installDriver(scriptsPath);
+        }
+        else if (command == "UNINSTALL") {
+            uninstallDriver(scriptsPath);
+        }
+        else if (command == "CREATEVDISK") {
+            createVirtualDisk(scriptsPath);
+        }
+        else if (command == "REMOVEVDISK") {
+            removeVirtualDisk(scriptsPath);
+        }
+        else if (command == "START") {
+            startDriver(scriptsPath);
+        }
+        else if (command == "STOP") {
+            stopDriver(scriptsPath);
+        }
+        else if (command == "DEVICEOPS") {
+            performDeviceOperations();
+        }
+        else if (command == "WRITE") {
+            createAndWriteNewFile();
+        }
+        else if (command == "READ") {
+            readFile();
+        }
+        else if (command == "QUERYFILE") {
+            queryFileFromList();
+            continue; 
+        }
+        else if (command == "LISTFILES") {
+            listFilesInVirtualDisk();
+        }
+        else if (command == "DELETE") {
+            std::string fileName;
+            std::cout << "Enter the full path of the file to delete (e.g., W:\\writeTest.txt): ";
+            std::getline(std::cin, fileName);
+            deleteFileFromVirtualDisk(fileName);
+        }
+        else if (command == "HELP") {
+            showHelp();
+        }
+        else if (command == "EXIT") {
+            exit(0);
+        }
+        else {
+            std::cout << "Unknown command entered. Type 'help' to see available commands.\n";
+        }
     }
 
     return 0;
@@ -262,38 +296,36 @@ std::wstring stringToWString(const std::string& str) {
 }
 
 void queryFileFromList() {
-    // List the files in the virtual disk (W:\)
     std::vector<std::string> files = listFilesInDirectory("W:");
     if (files.empty()) {
         std::cout << "No files found in the directory.\n";
-        return;
+        return;  
     }
 
-    // Display the files to the user
+
     std::cout << "Files in W:\\:\n";
     for (size_t i = 0; i < files.size(); ++i) {
         std::cout << i + 1 << ". " << files[i] << std::endl;
     }
 
-    // Ask the user to select a file by index
+
     int fileIndex = -1;
     std::cout << "Enter the number of the file you want to query: ";
     std::cin >> fileIndex;
 
-    // Ensure the user input is valid
+
     if (fileIndex < 1 || fileIndex > files.size()) {
         std::cout << "Invalid selection.\n";
-        return;
+        return;  
     }
 
     std::string selectedFile = files[fileIndex - 1];
 
-    // Convert the selected file path from std::string to std::wstring
     std::wstring fullPath = stringToWString("W:\\" + selectedFile);
 
-    // Open the selected file for querying information
+
     HANDLE hFile = CreateFile(
-        fullPath.c_str(),  // Use wide-character string here
+        fullPath.c_str(),  
         GENERIC_READ,
         0,
         NULL,
@@ -305,18 +337,17 @@ void queryFileFromList() {
     if (hFile == INVALID_HANDLE_VALUE) {
         DWORD error = GetLastError();
         std::cout << "Failed to open file: " << error << std::endl;
-        return;
+        return;  
     }
 
     HandleGuard fileGuard(hFile);
 
-    // Prompt the user for the file information they want to query
     std::string queryType;
     std::cout << "Enter the type of file information to query (basic/standard): ";
     std::cin >> queryType;
 
-    // Query file information based on the user input
     queryFileInformation(hFile, queryType);
+
 }
 
 std::vector<std::string> listFilesInDirectory(const std::string& directory) {
@@ -334,14 +365,12 @@ std::vector<std::string> listFilesInDirectory(const std::string& directory) {
         do {
             const std::wstring fileOrDir = findFileData.cFileName;
 
-            // Exclude system/hidden files and folders
             if ((findFileData.dwFileAttributes & FILE_ATTRIBUTE_HIDDEN) ||
                 (findFileData.dwFileAttributes & FILE_ATTRIBUTE_SYSTEM) ||
                 fileOrDir == L"." || fileOrDir == L"..") {
-                continue;  // Skip hidden/system folders
+                continue;  
             }
 
-            // Convert back to narrow string for display
             int size_needed = WideCharToMultiByte(CP_UTF8, 0, fileOrDir.c_str(), (int)fileOrDir.size(), NULL, 0, NULL, NULL);
             std::string fileName(size_needed, 0);
             WideCharToMultiByte(CP_UTF8, 0, fileOrDir.c_str(), (int)fileOrDir.size(), &fileName[0], size_needed, NULL, NULL);
@@ -355,14 +384,12 @@ std::vector<std::string> listFilesInDirectory(const std::string& directory) {
 }
 
 void PrintFileTime(const LARGE_INTEGER& largeIntegerTime) {
-    // Convert LARGE_INTEGER to FILETIME
     FILETIME fileTime;
     fileTime.dwLowDateTime = largeIntegerTime.LowPart;
     fileTime.dwHighDateTime = largeIntegerTime.HighPart;
 
     SYSTEMTIME systemTime;
 
-    // Convert the FILETIME to SYSTEMTIME (UTC)
     if (FileTimeToSystemTime(&fileTime, &systemTime)) {
         std::cout << systemTime.wYear << "-"
             << systemTime.wMonth << "-"
@@ -380,7 +407,7 @@ void PrintFileTime(const LARGE_INTEGER& largeIntegerTime) {
 void queryFileInformation(HANDLE hFile, const std::string& queryType) {
     if (queryType == "basic") {
         FILE_BASIC_INFO basicInfo;
-        // Retrieve basic information
+
         if (GetFileInformationByHandleEx(hFile, FileBasicInfo, &basicInfo, sizeof(basicInfo))) {
             std::cout << "Creation Time: ";
             PrintFileTime(basicInfo.CreationTime);
@@ -424,23 +451,23 @@ std::wstring stringToWstring(const std::string& str) {
     return std::wstring(str.begin(), str.end());
 }
 
-void writeFileToDevice(const std::string& filePath, const std::string& dataToWrite) {
-    // Convert std::string to std::wstring
+bool writeFileToDevice(const std::string& filePath, const std::string& dataToWrite) {
+
     std::wstring wideFilePath = stringToWstring(filePath);
 
     HANDLE hFile = CreateFile(
-        wideFilePath.c_str(),  // Pass wide string here
+        wideFilePath.c_str(),  
         GENERIC_WRITE,
         0,
         NULL,
-        CREATE_ALWAYS,  // Always create a new file or overwrite
+        CREATE_ALWAYS, 
         FILE_ATTRIBUTE_NORMAL,
         NULL
     );
 
     if (hFile == INVALID_HANDLE_VALUE) {
         std::cerr << "Failed to create or open file: " << GetLastError() << std::endl;
-        return;
+        return false; 
     }
 
     DWORD bytesWritten;
@@ -454,15 +481,19 @@ void writeFileToDevice(const std::string& filePath, const std::string& dataToWri
 
     if (!success) {
         std::cerr << "Failed to write to file: " << GetLastError() << std::endl;
+        CloseHandle(hFile);
+        return false;
     }
     else {
         std::cout << "Successfully wrote " << bytesWritten << " bytes to the file: " << filePath << std::endl;
     }
 
     CloseHandle(hFile);
+    return true;  
 }
 
-void appendToFile(const std::string& filePath, const std::string& dataToAppend) {
+
+bool appendToFile(const std::string& filePath, const std::string& dataToAppend) {
     std::wstring wideFilePath = stringToWstring(filePath);
 
     HANDLE hFile = CreateFile(
@@ -470,14 +501,14 @@ void appendToFile(const std::string& filePath, const std::string& dataToAppend) 
         FILE_APPEND_DATA,
         FILE_SHARE_READ,
         NULL,
-        OPEN_EXISTING,  // Only open if the file exists
+        OPEN_EXISTING,
         FILE_ATTRIBUTE_NORMAL,
         NULL
     );
 
     if (hFile == INVALID_HANDLE_VALUE) {
         std::cerr << "Failed to open file for appending: " << GetLastError() << std::endl;
-        return;
+        return false; 
     }
 
     DWORD bytesWritten;
@@ -491,42 +522,68 @@ void appendToFile(const std::string& filePath, const std::string& dataToAppend) 
 
     if (!success) {
         std::cerr << "Failed to append data to file: " << GetLastError() << std::endl;
+        CloseHandle(hFile);
+        return false;  
     }
     else {
         std::cout << "Successfully appended " << bytesWritten << " bytes to the file." << std::endl;
     }
 
     CloseHandle(hFile);
+    return true; 
 }
 
-// Function to allow user to input file name and write data
 void createAndWriteNewFile() {
-    // Get user input for file name
+   
     std::string newFileName;
     std::cout << "Enter the full path and name of the new file (e.g., W:\\newTestFile.txt): ";
     std::getline(std::cin, newFileName);
 
-    // Get user input for file content
+    
+    HANDLE hFile = CreateFile(
+        stringToWstring(newFileName).c_str(),
+        GENERIC_WRITE,
+        0,
+        NULL,
+        CREATE_ALWAYS,
+        FILE_ATTRIBUTE_NORMAL,
+        NULL
+    );
+
+    if (hFile == INVALID_HANDLE_VALUE) {
+        std::cerr << "Failed to create or open file: " << GetLastError() << std::endl;
+        std::cerr << "Error occurred. Aborting further operations." << std::endl;
+        return; 
+    }
+
+    CloseHandle(hFile);
+
+  
     std::string fileContent;
     std::cout << "Enter the content to write to the file: ";
     std::getline(std::cin, fileContent);
 
-    // Create the file and write the user's input content
-    writeFileToDevice(newFileName, fileContent);
+ 
+    if (!writeFileToDevice(newFileName, fileContent)) {
+        std::cerr << "Error occurred. Aborting further operations." << std::endl;
+        return; 
+    }
 
-    // Ask if the user wants to append more data
+
     std::string appendChoice;
     std::cout << "Would you like to append more content to the file? (yes/no): ";
     std::getline(std::cin, appendChoice);
 
     if (appendChoice == "yes") {
-        // Get user input for content to append
+     
         std::string additionalData;
         std::cout << "Enter the content to append: ";
         std::getline(std::cin, additionalData);
 
-        // Append the content to the file
-        appendToFile(newFileName, additionalData);
+        if (!appendToFile(newFileName, additionalData)) {
+            std::cerr << "Failed to append content. Aborting." << std::endl;
+            return;  
+        }
     }
 
     std::cout << "Finished writing to the file." << std::endl;
@@ -576,14 +633,13 @@ void readFile() {
 }
 
 void listFilesInVirtualDisk() {
-    // List the files in the virtual disk (W:\)
+
     vector<string> files = listFilesInDirectory("W:");
     if (files.empty()) {
         cout << "No files found in the directory.\n";
         return;
     }
 
-    // Display the files to the user
     cout << "Files in W:\\:\n";
     for (size_t i = 0; i < files.size(); ++i) {
         cout << i + 1 << ". " << files[i] << endl;
@@ -605,11 +661,11 @@ void queryFileInformation(HANDLE hFile) {
 void deleteFileFromVirtualDisk(const std::string& fileName) {
     std::wstring wideFileName = std::wstring(fileName.begin(), fileName.end());
 
-    // Open the file with DELETE access and share it for reading/writing/deletion
+
     HANDLE fileHandle = CreateFile(
         wideFileName.c_str(),
         DELETE,
-        FILE_SHARE_DELETE | FILE_SHARE_READ | FILE_SHARE_WRITE,  // Allow sharing for deletion
+        FILE_SHARE_DELETE | FILE_SHARE_READ | FILE_SHARE_WRITE, 
         NULL,
         OPEN_EXISTING,
         FILE_ATTRIBUTE_NORMAL,
@@ -622,7 +678,7 @@ void deleteFileFromVirtualDisk(const std::string& fileName) {
         return;
     }
 
-    // Attempt to delete the file
+ 
     BOOL deleteSuccess = DeleteFile(wideFileName.c_str());
     if (!deleteSuccess) {
         DWORD error = GetLastError();
@@ -676,10 +732,6 @@ void performDeviceOperations() {
         cout << "Successfully wrote to file." << endl;
     }
 
-    // Query file information after writing
-    //queryFileInformation(hFile);
-
-    // Avoid naming conflict by renaming the second 'data' variable
     const char* filePath = "W:\\writeTest.txt";
     const std::string writeData = "Write test to the WFS driver!";
 
@@ -690,13 +742,17 @@ void performDeviceOperations() {
 void showHelp() {
     cout << "Ultimate wfsDriver Utility (UwU) - Command List\n\n";
 
+    cout << "UwU initialization comments.\n";
+    cout << "------------------------------------------\n";
     cout << "install\t\t- Install the wfsDriver.\n";
     cout << "uninstall\t- Uninstall the wfsDriver.\n";
     cout << "createvdisk\t- Create a virtual disk.\n";
     cout << "removevdisk\t- Remove the virtual disk.\n";
     cout << "start\t\t- Start the drive.\n";
     cout << "stop\t\t- Stop the driver.\n";
-    cout << "deviceops\t- Perform device operations.\n";
+    cout << "deviceops\t- Perform device operations.\n\n";
+    cout << "UwU Features.\n";
+    cout << "------------------------------------------\n";
     cout << "write\t        - Perform write operations.\n";
     cout << "read\t        - Read file.\n";
     cout << "queryfile\t- See file inforamtion.\n";

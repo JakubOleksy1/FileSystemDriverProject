@@ -1,4 +1,4 @@
-#include <ntifs.h>   // This will ensure proper types are included
+#include <ntifs.h>   
 #include "WfsDriver.h"
 #include "Routines.h"
 #include "Messages.h"
@@ -82,12 +82,9 @@ NTSTATUS WriteRoutine(PDEVICE_OBJECT DeviceObject, PIRP Irp) {
     }
 
     // Ensure we have enough space in our file system's internal structure
-    // Assume we have some way to manage file contents (could be in-memory for a virtual file system)
-    // Here we'll simulate appending to the file or overwriting, depending on the file pointer position.
     NTSTATUS status = STATUS_SUCCESS;
 
     __try {
-        // Simulate file content manipulation; copy buffer content to file data.
         PCHAR fileData = fileObject->FsContext; // Points to the file's in-memory data structure
         ULONG fileOffset = ioStackLocation->Parameters.Write.ByteOffset.LowPart; // Start writing at this position
 
@@ -105,7 +102,6 @@ NTSTATUS WriteRoutine(PDEVICE_OBJECT DeviceObject, PIRP Irp) {
         status = GetExceptionCode();
     }
 
-    // Complete the IRP and set the status
     Irp->IoStatus.Status = status;
     IoCompleteRequest(Irp, IO_NO_INCREMENT);
 
@@ -188,7 +184,7 @@ NTSTATUS QueryInformationRoutine(PDEVICE_OBJECT DeviceObject, PIRP Irp) {
 }
 
 NTSTATUS DirectoryControlRoutine(PDEVICE_OBJECT DeviceObject, PIRP Irp) {
-    UNREFERENCED_PARAMETER(DeviceObject);  // Add this line to suppress the warning
+    UNREFERENCED_PARAMETER(DeviceObject);
 
     PIO_STACK_LOCATION ioStackLocation = IoGetCurrentIrpStackLocation(Irp);
     FILE_INFORMATION_CLASS fileInformationClass = ioStackLocation->Parameters.QueryDirectory.FileInformationClass;
@@ -247,7 +243,7 @@ NTSTATUS DirectoryControlRoutine(PDEVICE_OBJECT DeviceObject, PIRP Irp) {
 }
 
 NTSTATUS DeleteFileRoutine(PDEVICE_OBJECT DeviceObject, PIRP Irp) {
-    UNREFERENCED_PARAMETER(DeviceObject); // Suppress unused parameter warning
+    UNREFERENCED_PARAMETER(DeviceObject); 
 
     PIO_STACK_LOCATION ioStackLocation = IoGetCurrentIrpStackLocation(Irp);
     PFILE_OBJECT fileObject = ioStackLocation->FileObject;  // Get the file object from the IRP stack
