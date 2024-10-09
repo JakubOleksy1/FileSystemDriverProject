@@ -739,7 +739,7 @@ void performDeviceOperations() {
 void showHelp() {
     cout << "Ultimate wfsDriver Utility (UwU) - Command List\n\n";
 
-    cout << "UwU initialization comments.\n";
+    cout << "UwU initialization commands.\n";
     cout << "------------------------------------------\n";
     cout << "install\t\t- Install the wfsDriver.\n";
     cout << "uninstall\t- Uninstall the wfsDriver.\n";
@@ -750,8 +750,8 @@ void showHelp() {
     cout << "deviceops\t- Perform device operations.\n\n";
     cout << "UwU Features.\n";
     cout << "------------------------------------------\n";
-    cout << "write\t        - Perform write operations.\n";
-    cout << "read\t        - Read file.\n";
+    cout << "write\t\t- Perform write operations.\n";
+    cout << "read\t\t- Read file.\n";
     cout << "queryfile\t- See file inforamtion.\n";
     cout << "listfiles\t- See list of files.\n";
     cout << "delete\t\t- Delete a selected file.\n";
